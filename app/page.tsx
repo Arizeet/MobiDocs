@@ -1,3 +1,4 @@
+import AlertLogin from "@/components/AlertLogin";
 import PatientForm from "@/components/forms/PatientForm"
 import PasskeyModal from "@/components/PasskeyModal";
 import Image from "next/image"
@@ -5,9 +6,13 @@ import Link from "next/link"
 
 export default function Home({ searchParams }: SearchParamProps) {
   const isAdmin = searchParams.admin === 'true';
+  const hasRegistered = searchParams.hasRegistered === 'true';
+  const existingUserId = searchParams.existingUserId
+  const userId = Array.isArray(existingUserId) ? existingUserId[0] : existingUserId;
   return (
     <div className="flex h-screen max-h-screen">
       {isAdmin && <PasskeyModal />}
+      {hasRegistered && <AlertLogin existingUserId={userId} />}
 
       <section className="remove-scrollbar container my-auto">
         <div className="sub-container max-w-[496px]">

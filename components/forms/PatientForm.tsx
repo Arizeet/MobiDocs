@@ -9,7 +9,9 @@ import SubmitButton from "../SubmitButton"
 import { useState } from "react"
 import { UserFormValidation } from "@/lib/validation"
 import { useRouter } from "next/navigation"
-import { createUser } from "@/lib/actions/patient.actions"
+import { createUser, getUserByCredentials, getUserByPhone } from "@/lib/actions/patient.actions"
+import AlertLogin from "../AlertLogin"
+
 
 export enum FormFieldType {
     INPUT = 'input',
@@ -47,7 +49,20 @@ const PatientForm = () => {
             const userData = { name, email, phone };
             // const userExists = await getUsers(userData)
             const newUser = await createUser(userData);
-            if (newUser) router.push(`/patients/${newUser.$id}/register`)
+
+            if (newUser) {
+                console.log(newUser);
+                router.push(`/patients/${newUser.$id}/register`)
+            }
+            else {
+                console.log("User with the same email or phone already exists");
+                const existingUser = await getUserByCredentials(email, phone)
+                if (existingUser) {
+                    console.log(existingUser);
+                    router.push(`/?hasRegistered=true&existingUserId=${existingUser.$id}`)
+                    // router.push(`/patients/${existingUser.$id}/new-appointment`)
+                }
+            }
         } catch (error) {
             console.log(error);
         }

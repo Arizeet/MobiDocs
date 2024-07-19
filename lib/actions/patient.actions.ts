@@ -17,15 +17,51 @@ export const createUser = async (user: CreateUserParams) => {
         console.log({ newUser });
         return parseStringify(newUser);
     } catch (error: any) {
-        if (error && error?.code === 409) {
-            const documents = await users.list([
-                Query.equal('email',[user.email])
-            ])
-            return documents?.users[0];
-        }
+        // if (error && error?.code === 409) {
+        //     const documents = await users.list([
+        //         Query.equal('email', [user.email]),
+        //     ])
+        //     return documents?.users[0];
+        // }
         console.error("An error occurred while creating a new user:", error);
     }
 }
+
+export const getUserByCredentials = async (email: string, phone: string) => {
+    try {
+        let response = await users.list([Query.equal('email', email)]);
+
+        if (response.total > 0) {
+            return response.users[0];
+        } else {
+            response = await users.list([Query.equal('phone', phone)]);
+            if (response.total > 0) {
+                return response.users[0];
+            }
+            return null;
+        }
+    } catch (error) {
+        console.error("An error occurred while fetching the user by email:", error);
+        throw error;
+    }
+};
+
+export const getUserByPhone = async (phone: string) => {
+    try {
+        const response = await users.list([
+            Query.equal('phone', phone)
+        ]);
+
+        if (response.total > 0) {
+            return response.users[0];
+        } else {
+            return null;
+        }
+    } catch (error) {
+        console.error("An error occurred while fetching the user by email:", error);
+        throw error;
+    }
+};
 
 export const getUsers = async (userId: string) => {
     try {
