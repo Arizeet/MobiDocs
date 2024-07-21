@@ -24,12 +24,14 @@ const AlertLogin = ({ existingUserId }: UserProps) => {
     const path = usePathname();
     const [open, setOpen] = useState(true);
     const [error, setError] = useState('');
+    const [userDetails, setUserDetails] = useState<{ email: string; phone: string } | null>(null);
 
     useEffect(() => {
         const fetchUser = async () => {
             if (existingUserId) {
                 try {
                     const user = await getPatient(existingUserId);
+                    setUserDetails({ email: user.email, phone: user.phone });
                 } catch (error) {
                     console.error('Failed to fetch user details:', error);
                     setError('Failed to fetch user details');
@@ -59,11 +61,17 @@ const AlertLogin = ({ existingUserId }: UserProps) => {
                         User Already Exists
                     </AlertDialogTitle>
                     <AlertDialogDescription>
-                        User already exists with this email or phone number. Do you want to continue with this email or phone number?
+                        User already exists with this email or phone number. Do you want to continue with the below credentials?
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <div>
                     {error && <p className="shad-error text-14-regular mt-2 flex justify-center">{error}</p>}
+                    {userDetails && (
+                        <div>
+                            <p>Email: {userDetails.email}</p>
+                            <p>Phone: {userDetails.phone}</p>
+                        </div>
+                    )}
                 </div>
                 <AlertDialogFooter>
                     <AlertDialogCancel onClick={() => closeModal()}>Cancel</AlertDialogCancel>

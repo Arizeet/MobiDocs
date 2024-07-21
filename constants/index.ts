@@ -27,21 +27,25 @@ export const PatientFormDefaultValues = {
 };
 
 export const IdentificationTypes = [
-    "Aadhaar Card",
-    "Birth Certificate",
-    "Driver's License",
-    "Medical Insurance Card/Policy",
-    "Military ID Card",
-    "National Identity Card",
-    "Passport",
-    "Resident Alien Card (Green Card)",
-    "Social Security Card",
-    "State ID Card",
-    "Student ID Card",
-    "Voter ID Card",
+  "Aadhaar Card",
+  "Birth Certificate",
+  "Driver's License",
+  "Medical Insurance Card/Policy",
+  "Military ID Card",
+  "National Identity Card",
+  "Passport",
+  "Resident Alien Card (Green Card)",
+  "Social Security Card",
+  "State ID Card",
+  "Student ID Card",
+  "Voter ID Card",
 ];
 
 export const Doctors = [
+  {
+    image: "/assets/images/dr-purvi2.png",
+    name: "Purvi Mahapatra",
+  },
   {
     image: "/assets/images/dr-green.png",
     name: "John Green",
