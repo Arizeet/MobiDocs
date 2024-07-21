@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { useEffect, useState } from 'react';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -10,42 +10,47 @@ import {
     AlertDialogFooter,
     AlertDialogHeader,
     AlertDialogTitle,
-    AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
+} from "@/components/ui/alert-dialog";
 
-import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { getPatient, getUserByCredentials } from '@/lib/actions/patient.actions';
+import { getPatient } from '@/lib/actions/patient.actions';
 
 interface UserProps {
-    existingUserId?: string
+    existingUserId?: string;
 }
 
-const AlertLogin = async ({ existingUserId }: UserProps) => {
+const AlertLogin = ({ existingUserId }: UserProps) => {
     const router = useRouter();
     const path = usePathname();
     const [open, setOpen] = useState(true);
-    const [error, setError] = useState('')
-    if (existingUserId) {
-        try {
-            const user = await getPatient(existingUserId);
-        } catch (error) {
-            console.error('Failed to fetch user details:', error);
-        }
-    }
+    const [error, setError] = useState('');
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            if (existingUserId) {
+                try {
+                    const user = await getPatient(existingUserId);
+                } catch (error) {
+                    console.error('Failed to fetch user details:', error);
+                    setError('Failed to fetch user details');
+                }
+            }
+        };
+
+        fetchUser();
+    }, [existingUserId]);
 
     const continueWithExisting = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-        e.preventDefault()
-        router.push(`/patients/${existingUserId}/new-appointment`)
+        e.preventDefault();
+        router.push(`/patients/${existingUserId}/new-appointment`);
         setOpen(false);
-    }
-
+    };
 
     const closeModal = () => {
         setOpen(false);
         router.push('/');
-    }
+    };
+
     return (
         <AlertDialog open={open} onOpenChange={setOpen}>
             <AlertDialogContent className="shad-alert-dialog">
@@ -66,8 +71,7 @@ const AlertLogin = async ({ existingUserId }: UserProps) => {
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>
+    );
+};
 
-    )
-}
-
-export default AlertLogin
+export default AlertLogin;
